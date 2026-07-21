@@ -1,6 +1,6 @@
 # UPLINK Brand Guide
 
-Status: LOCKED (Commit 001.5). Do not change without explicit revision, same as UPLINK_BUILD_CONFIG.md's locked decisions.
+Status: PENDING ON-DEVICE CONFIRMATION (Commit 001.5.2). The mark's geometry was revised in 001.5.2 to fix a pin-like icon collision (see construction notes below) but has only been verified analytically, not visually rendered. Once confirmed at real launcher-icon size on-device, this should be updated back to LOCKED. Until then, treat as provisional — same rigor as UPLINK_BUILD_CONFIG.md's locked decisions once it is locked, but not yet.
 
 ## Identity
 
@@ -15,18 +15,25 @@ Source: `branding/uplink_mark.svg`
 Construction:
 - Four corner brackets, proportions matched to the in-app `CornerBracketFrame.kt` component (bracket arm ≈ 16% of frame span, corner-anchored right angles, square line caps). The mark should look like it was extracted from the app's own UI language, not designed separately from it.
 - A central `U`, built as one continuous stroke (not two separate letterforms glued together) — this is what makes it read as a "signal path" rather than typography.
-- A single upward tick + dot rising off the U's right leg, indicating transmission. This is the only "broadcast" cue in the mark.
-- One faint secondary-color echo arc near the tick, using `UplinkSignalDim`, kept subtle — this is decoration, not a second focal point.
+- Two open signal-emission arcs sitting in the frame's empty upper-right pocket, clear of both the U and the corner bracket: an inner arc (`UplinkSignal`, nearer/brighter) and an outer arc (`UplinkSignalDim`, larger/offset up-and-right/dimmer), suggesting propagation outward. This is the only "broadcast" cue in the mark.
+- The arcs are deliberately **not** geometrically attached to the U — no connector stem, no dot. The design principle: the signal only needs to visually belong to the U via optical proximity, not physically touch it. An earlier construction used a tick + dot rising directly off the U's right leg; at real launcher-icon size this read unambiguously as a map/location pin rather than a signal indicator, so it was replaced (Commit 001.5.2).
 
 Explicitly excluded:
-- No antenna/tower iconography.
-- No wifi/radar concentric-arc symbolism.
+- No generic Wi-Fi/radar iconography. Signal arcs may be used only as a secondary broadcast indicator integrated with the UPLINK operator mark. (Narrowed in Commit 001.5.2 — the original rule targeted generic network-utility iconography, not curved signal forms generally; the twin-arc broadcast indicator is a deliberate, integrated exception, not a violation of the original intent.)
+- Avoid the standard Wi-Fi stack specifically (three evenly spaced fan arcs) — this is the concrete shape the rule above is guarding against.
+- Avoid standalone antenna/tower/radio imagery.
+- Avoid dots, pins, or location-marker silhouettes — this is what the original tick+dot construction collapsed into at small size, and part of why it was replaced.
 - No text or lettering inside the icon itself (small sizes destroy legibility of embedded text — see Android launcher scaling below).
 - No gradients, no drop shadows, no glow effects. UPLINK's design system replaces shadow/glow with the corner-bracket focus indicator (see `CornerBracketFrame.kt`); the brand mark follows the same rule.
 
+Supporting hierarchy (Commit 001.5.2):
+- The corner-frame operator identity and the central U remain the primary recognition elements — this hasn't changed.
+- Signal arcs are a supporting element, not the main symbol; they should read as secondary to the frame + U at any size.
+- Signal geometry should stay asymmetrical/operator-style (offset radii, non-uniform spacing) rather than the evenly-spaced, symmetrical fan of a generic network-status icon. This is what keeps the mark reading as "terminal + broadcast system" rather than "consumer networking utility."
+
 Why this direction (vs. the two rejected concepts, preserved in `branding/concepts/`):
 - `concept_a_signal_spike.svg` and `concept_b_waveform.svg` both had fine detail (ping arcs, multi-bar waveforms) that degrades into visual noise at real launcher-icon sizes (48dp and below).
-- `concept_c_operator_frame.svg` (promoted to `uplink_mark.svg`) has exactly two strokes of complexity — the frame and the U — plus one small tick. It survives Android's adaptive-icon masking and scaling because there's nothing fine enough to lose.
+- `concept_c_operator_frame.svg` (promoted to `uplink_mark.svg`) has exactly two strokes of complexity — the frame and the U — plus two small signal arcs. It survives Android's adaptive-icon masking and scaling because there's nothing fine enough to lose.
 
 ## Palette
 
