@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Brand/base color tokens for XML resources (adaptive icon, manifest,
+    etc. — anywhere Compose's Colors.kt can't be referenced directly).
+    These values must always mirror Colors.kt exactly. If Colors.kt
+    changes, update this file in the same commit.
+-->
+<resources>
+    <color name="uplink_void">#08090C</color>
+    <color name="uplink_panel">#111319</color>
+    <color name="uplink_panel_2">#171A22</color>
+    <color name="uplink_line">#252A35</color>
+
+    <color name="uplink_signal">#0DF2C4</color>
+    <color name="uplink_signal_dim">#0A9C84</color>
+
+    <color name="uplink_alert">#FF3864</color>
+    <color name="uplink_amber">#FFB020</color>
+
+    <color name="uplink_text">#F2F4F2</color>
+    <color name="uplink_text_dim">#8890A0</color>
+    <color name="uplink_text_faint">#4E5462</color>
+</resources>

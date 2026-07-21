@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">
+  <rect width="400" height="400" fill="#08090C"/>
+  <!-- Corner brackets, all four, echoing CornerBracketFrame component -->
+  <path d="M 90 130 L 90 100 L 120 100" stroke="#0DF2C4" stroke-width="10" fill="none"/>
+  <path d="M 310 130 L 310 100 L 280 100" stroke="#0DF2C4" stroke-width="10" fill="none"/>
+  <path d="M 90 270 L 90 300 L 120 300" stroke="#0DF2C4" stroke-width="10" fill="none"/>
+  <path d="M 310 270 L 310 300 L 280 300" stroke="#0DF2C4" stroke-width="10" fill="none"/>
+  <!-- Central U, clean single-stroke, no serifs -->
+  <path d="M 165 155 L 165 235 Q 165 255 185 255 L 215 255 Q 235 255 235 235 L 235 155"
+        stroke="#0DF2C4" stroke-width="18" fill="none" stroke-linecap="square"/>
+  <!-- single signal tick rising from top-right of the U, minimal -->
+  <line x1="235" y1="155" x2="255" y2="120" stroke="#0DF2C4" stroke-width="10" stroke-linecap="square"/>
+  <circle cx="255" cy="120" r="6" fill="#0DF2C4"/>
+</svg>

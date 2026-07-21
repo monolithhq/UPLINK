@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="160" viewBox="0 0 720 160">
+  <!-- UPLINK wordmark — for boot title, About screen, README, release pages.
+       Font: JetBrains Mono (matches in-app monospace family — see Fonts.kt).
+       Uppercase, tracking expanded ~0.12em, signal cyan on void.
+       This SVG uses a system monospace fallback for portability; when
+       rendering inside the app itself, use the real JetBrainsMonoFamily
+       Compose FontFamily instead of this file. -->
+
+  <rect width="720" height="160" fill="#08090C"/>
+
+  <text x="50%" y="54%"
+        font-family="'JetBrains Mono', 'Roboto Mono', 'Courier New', monospace"
+        font-size="72"
+        font-weight="600"
+        letter-spacing="14"
+        fill="#0DF2C4"
+        text-anchor="middle"
+        dominant-baseline="middle">UPLINK</text>
+
+  <!-- underline tick, echoes the mark's signal-tick motif -->
+  <line x1="245" y1="118" x2="475" y2="118" stroke="#0A9C84" stroke-width="3"/>
+</svg>

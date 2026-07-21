@@ -7,6 +7,8 @@
         android:name=".UplinkApplication"
         android:allowBackup="false"
         android:label="UPLINK"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/Theme.Uplink"
         android:usesCleartextTraffic="true">
 

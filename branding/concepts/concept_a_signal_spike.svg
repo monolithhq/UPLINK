@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">
+  <rect width="400" height="400" fill="#08090C"/>
+  <!-- Left bracket -->
+  <path d="M 130 120 L 100 120 L 100 280 L 130 280" stroke="#0DF2C4" stroke-width="14" fill="none" stroke-linecap="square"/>
+  <!-- Right bracket -->
+  <path d="M 270 120 L 300 120 L 300 280 L 270 280" stroke="#0DF2C4" stroke-width="14" fill="none" stroke-linecap="square"/>
+  <!-- U formed from upward signal path: two verticals rising into a shared peak, like a signal spike -->
+  <path d="M 160 180 L 160 250 Q 160 270 180 270 L 220 270 Q 240 270 240 250 L 240 140" 
+        stroke="#0DF2C4" stroke-width="16" fill="none" stroke-linecap="square" stroke-linejoin="miter"/>
+  <!-- Signal ping arcs off the top of the rising stroke -->
+  <path d="M 252 128 Q 262 118 272 128" stroke="#0A9C84" stroke-width="8" fill="none" stroke-linecap="round"/>
+  <path d="M 246 140 Q 262 122 278 140" stroke="#0A9C84" stroke-width="6" fill="none" stroke-linecap="round" opacity="0.7"/>
+</svg>
