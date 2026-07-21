@@ -9,6 +9,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -24,7 +25,7 @@ fun ScanlineOverlay(
     baseAlpha: Float = 0.035f
 ) {
     val infiniteTransition = rememberInfiniteTransition(label = "scanline_drift")
-    val drift by infiniteTransition.animateFloat(
+    val drift: Float by infiniteTransition.animateFloat(
         initialValue = 0f,
         targetValue = lineSpacingDp * 2,
         animationSpec = infiniteRepeatable(
@@ -35,11 +36,11 @@ fun ScanlineOverlay(
     )
 
     Canvas(modifier = modifier.fillMaxSize()) {
-        val spacingPx = lineSpacingDp * density
-        val driftPx = drift * density
+        val spacingPx: Float = lineSpacingDp * density
+        val driftPx: Float = drift * density
         val lineColor = Color.Black.copy(alpha = baseAlpha)
 
-        var y = -spacingPx + (driftPx % spacingPx)
+        var y: Float = -spacingPx + (driftPx.mod(spacingPx))
         while (y < size.height) {
             drawLine(
                 color = lineColor,
