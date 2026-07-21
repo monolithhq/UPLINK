@@ -5,30 +5,66 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import com.uplink.ui.boot.BootCoordinator
+import com.uplink.ui.boot.BootEvent
+import com.uplink.ui.boot.BootPhase
+import com.uplink.ui.boot.BootReadiness
 import com.uplink.ui.components.BlueprintBackground
+import com.uplink.ui.components.CRTStartupEffect
 import com.uplink.ui.components.ScanlineOverlay
+import com.uplink.ui.components.SignalLockAnimation
+import com.uplink.ui.components.TerminalLogRenderer
 import com.uplink.ui.theme.TelemetryBody
 import com.uplink.ui.theme.TerminalTitleLarge
-import com.uplink.ui.theme.UplinkAlert
 import com.uplink.ui.theme.UplinkSignal
 import com.uplink.ui.theme.UplinkText
-import com.uplink.ui.theme.UplinkTextDim
 import com.uplink.ui.theme.UplinkVoid
 
-// Boot sequence screen. Renders whatever BootViewModel's state machine
-// reports — this file has no timing logic of its own. When Commits
-// 004-006 replace simulated transitions with real ones, this screen
-// does not need to change.
+// Boot flow: content (log, grid, scanlines) composes immediately;
+// CRTStartupEffect reveals it over ~120ms as an overlay rather than
+// gating its existence, so nothing is blank while CRT plays. Once the
+// coordinator reports Ready, a signal-lock beat plays, then onEvent is
+// called with Completed.
+//
+// State/event shape matches what Commit 003+ architecture will expect:
+// BootScreen only reads BootCoordinator.state and reports out via a
+// single event callback, rather than owning imperative navigation
+// logic itself.
+sealed class BootScreenEvent {
+    object Completed : BootScreenEvent()
+}
+
 @Composable
-fun BootScreen(viewModel: BootViewModel = viewModel()) {
+fun BootScreen(
+    onEvent: (BootScreenEvent) -> Unit = {}
+) {
+    val coordinator = remember { BootCoordinator() }
+    var showSignalLock by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        coordinator.emit(BootEvent.UiReady.takeIf { BootReadiness.checkUiReady() }
+            ?: BootEvent.Failed("UI", "ui_check_failed"))
+        coordinator.emit(BootEvent.FontsReady.takeIf { BootReadiness.checkFontsReady() }
+            ?: BootEvent.Failed("FONTS", "fonts_check_failed"))
+    }
+
+    val state = coordinator.state
+
+    LaunchedEffect(state.phase) {
+        if (state.phase is BootPhase.Ready && !showSignalLock) {
+            showSignalLock = true
+        }
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -36,75 +72,33 @@ fun BootScreen(viewModel: BootViewModel = viewModel()) {
     ) {
         BlueprintBackground(modifier = Modifier.fillMaxSize())
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(24.dp),
-            verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center
-        ) {
-            Text(
-                text = "UPLINK",
-                style = TerminalTitleLarge,
-                color = UplinkText
-            )
-
-            androidx.compose.foundation.layout.Spacer(modifier = Modifier.padding(top = 8.dp))
-
-            Text(
-                text = "BOOT_SEQUENCE",
-                style = TelemetryBody,
-                color = UplinkTextDim
-            )
+        Column(modifier = Modifier.fillMaxSize().padding(24.dp)) {
+            Text(text = "UPLINK v0.1", style = TerminalTitleLarge, color = UplinkText)
 
             androidx.compose.foundation.layout.Spacer(modifier = Modifier.padding(top = 16.dp))
 
-            LazyColumn {
-                items(viewModel.logLines) { line ->
-                    BootLogRow(line)
-                }
+            TerminalLogRenderer(lines = state.logLines)
+
+            if (state.phase is BootPhase.Complete) {
+                Text(
+                    text = "ENTERING BROADCAST_NET",
+                    style = TelemetryBody,
+                    color = UplinkSignal
+                )
             }
 
-            if (viewModel.currentState == BootState.ERROR) {
-                androidx.compose.foundation.layout.Spacer(modifier = Modifier.padding(top = 16.dp))
-                Text(
-                    text = "SIGNAL_LOST",
-                    style = TelemetryBody,
-                    color = UplinkAlert
-                )
-                Text(
-                    text = "PRESS TO RETRY",
-                    style = TelemetryBody,
-                    color = UplinkTextDim
+            if (showSignalLock) {
+                SignalLockAnimation(
+                    onComplete = {
+                        coordinator.markComplete()
+                        onEvent(BootScreenEvent.Completed)
+                    }
                 )
             }
         }
 
         ScanlineOverlay(modifier = Modifier.fillMaxSize())
-    }
-}
 
-@Composable
-private fun BootLogRow(line: BootLogLine) {
-    val resultText = when (line.result) {
-        BootLineResult.PENDING -> "[...]"
-        BootLineResult.OK -> "[OK]"
-        BootLineResult.FAILED -> "[FAILED]"
-    }
-    val resultColor = when (line.result) {
-        BootLineResult.PENDING -> UplinkTextDim
-        BootLineResult.OK -> UplinkSignal
-        BootLineResult.FAILED -> UplinkAlert
-    }
-
-    Text(
-        text = "> ${line.label.padEnd(24)} $resultText",
-        style = TelemetryBody,
-        color = if (line.result == BootLineResult.PENDING) UplinkTextDim else UplinkText,
-    )
-    androidx.compose.foundation.layout.Spacer(modifier = Modifier.padding(top = 2.dp))
-    if (line.result == BootLineResult.OK) {
-        // color override handled by re-rendering result token color separately
-        // kept simple for Commit 002; can be split into an AnnotatedString
-        // in a later polish pass if per-token coloring becomes worth it
+        CRTStartupEffect(onComplete = {})
     }
 }
