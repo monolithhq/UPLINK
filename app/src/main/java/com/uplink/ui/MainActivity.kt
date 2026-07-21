@@ -11,7 +11,9 @@ import com.uplink.ui.navigation.UplinkNavGraph
 import com.uplink.ui.screens.BootScreen
 import com.uplink.ui.screens.BootScreenEvent
 import com.uplink.ui.theme.UplinkTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -54,7 +54,7 @@ fun SignalDetailScreen(
                 errorMessage = null
             }
             is SignalResult.NotFound -> errorMessage = "SIGNAL NOT FOUND: $signalId"
-            is SignalResult.NetworkError -> errorMessage = "LINK UNREACHABLE: ${result.message}"
+            is SignalResult.NetworkError -> errorMessage = "LINK UNREACHABLE: ${result.exception.message ?: "unknown error"}"
             is SignalResult.BackendError -> errorMessage = "BACKEND FAULT (${result.code}): ${result.message}"
         }
     }

@@ -42,7 +42,7 @@ fun HomeScreen(
                 signals = result.data
                 errorMessage = null
             }
-            is SignalResult.NetworkError -> errorMessage = "LINK UNREACHABLE: ${result.message}"
+            is SignalResult.NetworkError -> errorMessage = "LINK UNREACHABLE: ${result.exception.message ?: "unknown error"}"
             is SignalResult.BackendError -> errorMessage = "BACKEND FAULT (${result.code}): ${result.message}"
             is SignalResult.NotFound -> errorMessage = "CATALOG NOT FOUND"
         }
